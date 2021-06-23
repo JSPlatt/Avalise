@@ -1,12 +1,13 @@
-import logo from './avalise2.png'
 import './App.css';
-import Products from './components/Products/Products'
-
 import React from 'react'
+
+
+import { Products, Navbar } from './components'
 
 function App() {
   return (
     <div>
+        <Navbar />
         <Products />
     </div>
   )
