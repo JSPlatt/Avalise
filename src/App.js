@@ -1,4 +1,4 @@
-import logo from './logo.svg'
+import logo from './avalise2.png'
 import './App.css';
 
 
