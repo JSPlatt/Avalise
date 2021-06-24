@@ -18,12 +18,10 @@ function App() {
       fetchProducts()
   }, [])
 
-  console.log(products)
-
   return (
     <div>
         <Navbar />
-        <Products />
+        <Products products={products}/>
     </div>
   )
 }
