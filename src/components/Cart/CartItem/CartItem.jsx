@@ -15,9 +15,10 @@ const CartItem = ({ item }) => {
             <CardActions className={classes.cardActions}>
                 <div className={classes.buttons}>
                     <Button type='button' size='small'>-</Button>
-                
+                        <Typography>{item.quantity}</Typography>
                     <Button type='button' size='small'>+</Button>
                 </div>
+                <Button variant='contained' type='button' color='secondary'>Remove</Button>
             </CardActions>
         </Card>
     )
