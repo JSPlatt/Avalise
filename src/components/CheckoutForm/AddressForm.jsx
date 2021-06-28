@@ -40,11 +40,13 @@ const AddressForm = ({ checkoutToken }) => {
                         <FormInput required name='zip' label='ZIP / Postal code'/>
                         <Grid type xs={12} sm={6}>
                             <InputLabel>Shipping Country</InputLabel>
-                            <Select value='' fullWidth onChange=''>
-                                <MenuItem key='' value=''>
-                                    US
-                                </MenuItem>
-                            </Select>
+                            <Select value={shippingCountry} fullWidth onChange={(e) => setShippingCountry(e.target.value)}>
+                                {Object.entries(shippingCountries).map(([code, name]) => ({ id: code, label: name })).map((item) => (
+                            <MenuItem key={item.id} value={item.id}>
+                                {item.label}
+                            </MenuItem>
+                            ))}
+                        </Select>
 
                         </Grid>
                         <Grid type xs={12} sm={6}>
