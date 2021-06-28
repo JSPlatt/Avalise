@@ -19,10 +19,11 @@ const AddressForm = ({ checkoutToken }) => {
 
         console.log(countries)
         setShippingCountries(countries)
+        setShippingCountry(Object.keys(countries)[0])
     }
 
     useEffect(() => {
-        fetchShippingCountries(checkoutToken?.id)
+        fetchShippingCountries(checkoutToken.id)
     }, [])
 
     return (
@@ -41,7 +42,7 @@ const AddressForm = ({ checkoutToken }) => {
                             <InputLabel>Shipping Country</InputLabel>
                             <Select value='' fullWidth onChange=''>
                                 <MenuItem key='' value=''>
-                                    Select Me
+                                    US
                                 </MenuItem>
                             </Select>
 
