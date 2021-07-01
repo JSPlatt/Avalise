@@ -7,11 +7,40 @@ import Review from './Review'
 
 const stripePromise = loadStripe(process.env.REACT_APP__STRIPE_PUBLIC_KEY)
 
-const PaymentForm = ({ checkoutToken, backStep }) => {
+const PaymentForm = ({ checkoutToken, backStep, shippingData }) => {
 
-    const handleSubmit = () => {
+    const handleSubmit = async (event, elements, stripe) => {
+        event.preventDefault()
+
+        if(!stripe || !elements) return
+
+        const cardElement = elements.getElement(CardElement)
+
+        const { error, paymentMethod } = await stripe.createPaymentMethod({ type: 'card', card: cardElement})
+
+        if(error) {
+            console.log(error)
+        } else {
+            const orderData = {
+                list_items: checkoutToken.live.line_items,
+                customer: { firstname: shippingData.firstName, lastname: shippingData.lastName, email: shippingData.email},
+                shipping: { name: 'Primary', street: shippingData.address1, town_city: shippingData.city,
+                county_state: shippingData.shippingSubdivision,
+                postal_zip_code: shippingData.zip,
+                country: shippingData.shippingCountry
+            },
+            fulfillment: { shipping_method: shippingData.shippingOption },
+            payment: {
+                gateway: 'strip',
+                stripe: {
+                    payment_method_id: paymentMethod.id
+                }
+            }
+        }
 
     }
+
+}
 
     return (
         <>
@@ -21,7 +50,7 @@ const PaymentForm = ({ checkoutToken, backStep }) => {
             <Elements stripe={stripePromise}>
                 <ElementsConsumer>
                     {(elements, stripe) => (
-                        <form onSubmit={(e) => handleSubmit}>
+                        <form onSubmit={(e) => handleSubmit(e, elements, stripe)}>
                             <CardElement />
                             <br /> <br />
                             <div style={{display: 'flex', justifyContent:'space-between'}}>
