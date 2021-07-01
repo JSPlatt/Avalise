@@ -5,9 +5,9 @@ import { loadStripe } from '@stripe/stripe-js'
 import Review from './Review'
 
 
-const stripePromise = loadStripe(process.env.REACT_APP__STRIPE_PUBLIC_KEY)
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY)
 
-const PaymentForm = ({ checkoutToken, backStep, shippingData }) => {
+const PaymentForm = ({ checkoutToken, backStep, shippingData, onCaptureCheckout, nextStep }) => {
 
     const handleSubmit = async (event, elements, stripe) => {
         event.preventDefault()
@@ -22,7 +22,7 @@ const PaymentForm = ({ checkoutToken, backStep, shippingData }) => {
             console.log(error)
         } else {
             const orderData = {
-                list_items: checkoutToken.live.line_items,
+                line_items: checkoutToken.live.line_items,
                 customer: { firstname: shippingData.firstName, lastname: shippingData.lastName, email: shippingData.email},
                 shipping: { name: 'Primary', street: shippingData.address1, town_city: shippingData.city,
                 county_state: shippingData.shippingSubdivision,
@@ -31,13 +31,15 @@ const PaymentForm = ({ checkoutToken, backStep, shippingData }) => {
             },
             fulfillment: { shipping_method: shippingData.shippingOption },
             payment: {
-                gateway: 'strip',
+                gateway: 'stripe',
                 stripe: {
                     payment_method_id: paymentMethod.id
                 }
             }
         }
+            onCaptureCheckout(checkoutToken.id, orderData)
 
+            nextStep()
     }
 
 }
@@ -49,7 +51,7 @@ const PaymentForm = ({ checkoutToken, backStep, shippingData }) => {
             <Typography variant='h6' gutterBottom style={{margin: '20px 0'}}>Payment method</Typography>
             <Elements stripe={stripePromise}>
                 <ElementsConsumer>
-                    {(elements, stripe) => (
+                    {({elements, stripe}) => (
                         <form onSubmit={(e) => handleSubmit(e, elements, stripe)}>
                             <CardElement />
                             <br /> <br />
@@ -68,3 +70,4 @@ const PaymentForm = ({ checkoutToken, backStep, shippingData }) => {
 }
 
 export default PaymentForm
+
